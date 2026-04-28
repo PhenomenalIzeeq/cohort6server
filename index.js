@@ -1,6 +1,7 @@
 const express= require('express');
 
 const app = express()
+app.use(express.json())
 
 const port = 8080
 
@@ -48,6 +49,29 @@ app.get('/users/:id',(req,res)=> {
     res.status(200).json(user);
 });
 
+app.post('/new-user', (req,res) => {
+    const { name, email }= req.body;
+
+    //Validate input
+    if(!name || !email){
+        return res.status(400).json({
+            error: 'name and email are required',
+        });
+    }
+    //create new user object
+    const newUser={
+        id: users.length + 1,
+        name: name,
+        email: email,
+
+    };
+
+    users.push(newUser);
+
+    //201 created = resourse successfully created
+    res.status(201).json(newUser);
+});
+
 app.listen(port,()=>{
     console.log(`Server is listening on port ${port}`)
-})
+});
